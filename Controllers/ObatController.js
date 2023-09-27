@@ -113,8 +113,7 @@ export const getPurchases = async (req, res) => {
   try {
     const data = await prisma.transaksimasuk.findMany({ include: { obat: {
       select: {
-        nama: true,
-        harga: true
+        nama: true
       }
     } } });
     // const total = await prisma.transaksiMasuk.count()
@@ -159,7 +158,7 @@ export const createSale = async (req, res) => {
 };
 
 export const createPurchases = async (req, res) => {
-  const { id, stock } = req.body;
+  const { id, stock, nominal } = req.body;
   try {
     const data = await prisma.obat.update({
       where: { id },
@@ -168,6 +167,7 @@ export const createPurchases = async (req, res) => {
         transaksimasuk: {
           create: {
             jumlah: Number(stock),
+            nominal: Number(nominal)
           },
         },
       },
