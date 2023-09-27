@@ -113,7 +113,8 @@ export const getPurchases = async (req, res) => {
   try {
     const data = await prisma.transaksimasuk.findMany({ include: { obat: {
       select: {
-        nama: true
+        nama: true,
+        harga: true
       }
     } } });
     // const total = await prisma.transaksiMasuk.count()
@@ -211,3 +212,26 @@ export const createSatuan = async (req, res) => {
     });
   }
 };
+
+
+// TotalPendapatan
+
+export const getAllReveanue = async (req, res) =>{
+  try{
+   const aggregation = await prisma.transaksimasuk.aggregate({
+      _sum:{
+        jumlah
+      }
+   })
+
+   return res.status(200).json({
+    data: aggregation
+   })
+   
+  } catch (e) {
+    res.status(404).json({
+      msg: e.message,
+      status: 404,
+    });
+  }
+}
